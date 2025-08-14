@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== Basic SEO ===== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FitCalcHub — Free BMI, Calorie & Macro Calculators (Fast, Mobile-Friendly)</title>
+  <meta name="description" content="Use FitCalcHub's free BMI calculator, Mifflin-St Jeor calorie needs calculator, and macro calculator in one page. Accurate, mobile-friendly tools with tips, guides, and FAQs." />
+  <link rel="canonical" href="https://fitcalchub.netlify.app/" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="keywords" content="BMI calculator, calorie calculator, macro calculator, Mifflin St Jeor, fitness calculator, weight loss, nutrition, macros, BMR, TDEE, FitCalcHub" />
+
+  <!-- ===== Open Graph / Twitter ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FitCalcHub — Free BMI, Calorie & Macro Calculators" />
+  <meta property="og:description" content="Three powerful calculators in one: BMI, daily calorie needs, and macros. Clean, fast, ad-ready, and SEO-optimized." />
+  <meta property="og:url" content="https://fitcalchub.netlify.app/" />
+  <meta property="og:image" content="https://fitcalchub.netlify.app/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- ===== JSON-LD Schema (WebPage + WebApplication + FAQ) ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "FitCalcHub — BMI, Calorie & Macro Calculators",
+    "url": "https://fitcalchub.netlify.app/",
+    "description": "All-in-one fitness calculators with guides and FAQs: BMI, daily calories, and macro split."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"FitCalcHub Calculators",
+    "url":"https://fitcalchub.netlify.app/",
+    "applicationCategory":"HealthApplication",
+    "operatingSystem":"All",
+    "about":[{"@type":"Thing","name":"BMI"},{"@type":"Thing","name":"Calorie Needs"},{"@type":"Thing","name":"Macronutrients"}]
+  }
+  </script>
+  <script type="application/ld+json" id="faq-schema">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Is FitCalcHub free to use?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes, all calculators on FitCalcHub are free to use on any device."}
+      },
+      {
+        "@type":"Question",
+        "name":"How accurate is BMI?",
+        "acceptedAnswer":{"@type":"Answer","text":"BMI is a population-level screening tool. It does not distinguish between fat and muscle. Use it alongside other measures."}
+      },
+      {
+        "@type":"Question",
+        "name":"Which calorie formula do you use?",
+        "acceptedAnswer":{"@type":"Answer","text":"FitCalcHub uses the Mifflin–St Jeor equation to estimate BMR and then multiplies by activity level to estimate daily energy needs."}
+      },
+      {
+        "@type":"Question",
+        "name":"Can I see macros for weight loss or gain?",
+        "acceptedAnswer":{"@type":"Answer","text":"Yes. Choose a goal (lose, maintain, gain) and the macro calculator will output protein, carbohydrate, and fat grams per day."}
+      }
+    ]
+  }
+  </script>
+
+  <!-- ===== Inline Styles (fast single-file deploy) ===== -->
+  <style>
+    :root{
+      --bg:#f6fbf7;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --brand:#10b981; /* green */
+      --brand2:#0ea5e9; /* blue */
+      --danger:#ef4444;
+      --ring:rgba(16,185,129,.35);
+      --shadow:0 10px 28px rgba(2,6,23,.08);
+      --radius:18px;
+      --maxw:1140px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#f1f9f4 0%,var(--bg) 100%)}
+    .sr-only{position:absolute;left:-9999px}
+    .skip{position:absolute;left:-9999px}
+    .skip:focus{left:8px;top:8px;background:#fff;padding:.5rem .75rem;border-radius:10px;box-shadow:var(--shadow)}
+    /* Navbar */
+    .nav{
+      position:sticky;top:0;z-index:50;background:#ffffffcc;backdrop-filter:blur(10px) saturate(140%);
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .nav-inner{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800}
+    .brand .logo{font-size:1.35rem}
+    .brand span{color:var(--brand)}
+    .nav-links{display:flex;gap:1rem;list-style:none;margin:0;padding:0}
+    .nav-links a{text-decoration:none;color:var(--text);font-weight:700}
+    .nav-links a:hover{color:var(--brand)}
+    .nav-toggle{display:none;border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:.4rem .6rem}
+    @media (max-width:760px){
+      .nav-toggle{display:block}
+      .nav-links{position:absolute;right:1rem;top:60px;display:none;flex-direction:column;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:.6rem;box-shadow:var(--shadow)}
+      .nav-links.open{display:flex}
+    }
+    /* Header hero + top ad */
+    .header{max-width:var(--maxw);margin:0 auto;padding:1rem}
+    .hero{
+      background:linear-gradient(135deg,var(--brand),var(--brand2));
+      color:#fff;border-radius:var(--radius);padding:1.2rem 1rem;box-shadow:var(--shadow)
+    }
+    .hero h1{margin:.2rem 0 .35rem;font-size:clamp(1.3rem,3vw,2rem)}
+    .hero p{margin:0;opacity:.95}
+    /* Container + layout */
+    .container{max-width:var(--maxw);margin:0 auto;padding:1rem}
+    .layout{display:grid;grid-template-columns:1fr;gap:1rem}
+    .sidebar{display:none}
+    @media (min-width:1000px){
+      .layout{grid-template-columns:minmax(0,1fr) 320px}
+      .sidebar{display:block;position:sticky;top:4.8rem;height:fit-content}
+    }
+    /* Cards */
+    .card{
+      background:var(--card);border:1px solid rgba(0,0,0,.06);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:1rem
+    }
+    .card h2{margin:.2rem 0 .4rem;color:#065f46}
+    .muted{color:var(--muted)}
+    .lede{color:var(--muted);margin:.5rem 0 1rem}
+    /* Forms */
+    .grid{display:grid;grid-template-columns:1fr;gap:.75rem}
+    .two-col{display:grid;grid-template-columns:1fr;gap:.6rem}
+    @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr 1fr}}
+    label{font-weight:700;display:block;margin-bottom:.25rem}
+    input,select{
+      width:100%;padding:.75rem .85rem;border:1px solid #e5e7eb;border-radius:14px;background:#fff;
+      outline:none;transition:box-shadow .2s,border-color .2s
+    }
+    input:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 6px var(--ring)}
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+    .btn{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border:0;padding:.75rem 1rem;border-radius:14px;font-weight:800;cursor:pointer}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#0ea5e91a;color:#0369a1;border:1px solid #0ea5e933}
+    .error{color:var(--danger);font-weight:700;margin:.4rem 0 0;min-height:1.1em}
+    .result{
+      display:none;margin-top:.75rem;padding:1rem;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:14px;
+      animation:slide .35s ease both
+    }
+    @keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    /* Ads */
+    .ad{margin:1rem 0}
+    .ad .placeholder{
+      border:2px dashed #cbd5e1;background:#f8fafc;color:#475569;border-radius:14px;padding:14px;text-align:center;font-weight:700
+    }
+    .ad.top .placeholder{min-height:90px}
+    .ad.navbar .placeholder{min-height:60px}
+    .ad.inline .placeholder{min-height:120px}
+    .ad.mid .placeholder{min-height:180px}
+    .ad.bottom .placeholder{min-height:200px}
+    .ad.sidebar .placeholder{min-height:600px}
+    .ad.footer-sticky{
+      position:sticky;bottom:0;z-index:40;background:#ffffffd9;backdrop-filter:blur(8px);
+      border-top:1px solid rgba(0,0,0,.06)
+    }
+    .ad.footer-sticky .placeholder{min-height:60px}
+    /* Content blocks */
+    .info{margin-top:1rem}
+    .faq details{border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:.7rem .9rem;margin:.5rem 0}
+    .faq summary{font-weight:800;cursor:pointer}
+    .footer{color:var(--muted);text-align:center;padding:2rem 1rem 4.25rem}
+  </style>
+
+  <!-- ===== (Optional) AdSense loader include — add your client ID =====
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX" crossorigin="anonymous"></script>
+  ===================================================================== -->
+</head>
+<body>
+  <a href="#main" class="skip">Skip to content</a>
+
+  <!-- ===== Navigation with ad slot under it ===== -->
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <div class="brand"><span class="logo">💪</span><span>FitCalcHub</span></div>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="links">☰</button>
+      <ul id="links" class="nav-links">
+        <li><a href="#bmi">BMI</a></li>
+        <li><a href="#calories">Calories</a></li>
+        <li><a href="#macros">Macros</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="ad navbar" aria-label="Advertisement">
+      <div class="placeholder">Ad — Navbar Underlay (Responsive)</div>
+    </div>
+  </nav>
+
+  <!-- ===== Header / Hero + Top Ad ===== -->
+  <header class="header">
+    <div class="hero card">
+      <h1>Free Fitness Calculators: BMI, Daily Calories & Macro Split</h1>
+      <p class="lede">Fast, accurate & mobile-friendly. Choose units, get instant results, and learn how each formula works.</p>
+    </div>
+    <div class="ad top" aria-label="Advertisement">
+      <div class="placeholder">Ad — Top Leaderboard</div>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <div class="layout">
+      <div class="content">
+
+        <!-- ===== BMI CALCULATOR ===== -->
+        <section id="bmi" class="card" aria-labelledby="bmi-title">
+          <h2 id="bmi-title">BMI Calculator</h2>
+          <p class="muted">Switch between Metric and Imperial. BMI categories: Underweight, Normal, Overweight, Obese.</p>
+
+          <!-- In-content ad (before form) -->
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (BMI Top)</div>
+          </div>
+
+          <form id="bmiForm" novalidate>
+            <div class="two-col">
+              <div>
+                <label for="bmiUnit">Units</label>
+                <select id="bmiUnit">
+                  <option value="metric" selected>Metric (cm, kg)</option>
+                  <option value="imperial">Imperial (in, lb)</option>
+                </select>
+              </div>
+              <div>
+                <label for="bmiHeight">Height <span data-hunit>(cm)</span></label>
+                <input type="number" id="bmiHeight" inputmode="decimal" min="0" step="0.1" placeholder="e.g., 170" required />
+              </div>
+              <div>
+                <label for="bmiWeight">Weight <span data-wunit>(kg)</span></label>
+                <input type="number" id="bmiWeight" inputmode="decimal" min="0" step="0.1" placeholder="e.g., 65" required />
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn">Calculate</button>
+              <button type="button" class="btn secondary" id="bmiReset">Reset</button>
+            </div>
+            <p id="bmiError" class="error" role="alert" aria-live="assertive"></p>
+            <div id="bmiResult" class="result" aria-live="polite"></div>
+          </form>
+
+          <!-- In-content ad (after result) -->
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (BMI Bottom)</div>
+          </div>
+
+          <!-- Info + FAQ -->
+          <div class="info">
+            <h3>How BMI Works</h3>
+            <p class="muted">BMI = weight (kg) / height² (m²). For Imperial, BMI = 703 × weight (lb) / height² (in²). Use BMI as a general guide only—it doesn’t separate fat and muscle.</p>
+            <div class="ad inline" aria-label="Advertisement">
+              <div class="placeholder">Ad — Article Inline (BMI Explainer)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Between calculators ad -->
+        <section class="ad mid" aria-label="Advertisement">
+          <div class="placeholder">Ad — Between Sections (1)</div>
+        </section>
+
+        <!-- ===== CALORIE NEEDS CALCULATOR ===== -->
+        <section id="calories" class="card" aria-labelledby="cal-title">
+          <h2 id="cal-title">Calorie Needs Calculator (Mifflin–St Jeor)</h2>
+          <p class="muted">Estimate your daily calories based on BMR × activity. Adjust by goal to lose, maintain, or gain.</p>
+
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (Calories Top)</div>
+          </div>
+
+          <form id="calorieForm" novalidate>
+            <div class="grid">
+              <div>
+                <label for="age">Age (years)</label>
+                <input type="number" id="age" inputmode="numeric" min="12" max="100" placeholder="e.g., 25" required />
+              </div>
+              <div>
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label for="calHeight">Height (cm)</label>
+                <input type="number" id="calHeight" inputmode="decimal" min="50" max="250" step="0.1" placeholder="e.g., 170" required />
+              </div>
+              <div>
+                <label for="calWeight">Weight (kg)</label>
+                <input type="number" id="calWeight" inputmode="decimal" min="20" max="350" step="0.1" placeholder="e.g., 65" required />
+              </div>
+              <div>
+                <label for="activity">Activity Level</label>
+                <select id="activity" required>
+                  <option value="">Select</option>
+                  <option value="1.2">Sedentary (little or no exercise)</option>
+                  <option value="1.375">Lightly active (1–3 days/week)</option>
+                  <option value="1.55">Moderately active (3–5 days/week)</option>
+                  <option value="1.725">Very active (6–7 days/week)</option>
+                  <option value="1.9">Extra active (physical job or training)</option>
+                </select>
+              </div>
+              <div>
+                <label for="goal">Goal</label>
+                <select id="goal" required>
+                  <option value="">Select</option>
+                  <option value="lose">Lose weight</option>
+                  <option value="maintain">Maintain weight</option>
+                  <option value="gain">Gain weight</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn">Calculate</button>
+              <button type="button" class="btn secondary" id="calorieReset">Reset</button>
+            </div>
+            <p id="calorieError" class="error" role="alert" aria-live="assertive"></p>
+            <div id="calorieResult" class="result" aria-live="polite"></div>
+          </form>
+
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (Calories Bottom)</div>
+          </div>
+
+          <div class="info">
+            <h3>How Calorie Estimates Work</h3>
+            <p class="muted">We calculate BMR using Mifflin–St Jeor, then multiply by activity to get TDEE. For goals, we adjust ~±500 kcal/day to target ~0.5 kg/week change.</p>
+            <div class="ad inline" aria-label="Advertisement">
+              <div class="placeholder">Ad — Article Inline (Calories Explainer)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Between calculators ad -->
+        <section class="ad mid" aria-label="Advertisement">
+          <div class="placeholder">Ad — Between Sections (2)</div>
+        </section>
+
+        <!-- ===== MACRO CALCULATOR ===== -->
+        <section id="macros" class="card" aria-labelledby="macro-title">
+          <h2 id="macro-title">Macro Calculator</h2>
+          <p class="muted">Enter your calorie target and pick a goal to get protein, carbs, and fats (grams/day).</p>
+
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (Macros Top)</div>
+          </div>
+
+          <form id="macroForm" novalidate>
+            <div class="grid">
+              <div>
+                <label for="macroCalories">Daily Calories</label>
+                <input type="number" id="macroCalories" inputmode="numeric" min="800" max="6000" step="1" placeholder="e.g., 2200" required />
+              </div>
+              <div>
+                <label for="macroGoal">Goal</label>
+                <select id="macroGoal" required>
+                  <option value="">Select</option>
+                  <option value="lose">Lose weight</option>
+                  <option value="maintain">Maintain weight</option>
+                  <option value="gain">Gain weight</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn">Calculate</button>
+              <button type="button" class="btn secondary" id="macroReset">Reset</button>
+            </div>
+            <p id="macroError" class="error" role="alert" aria-live="assertive"></p>
+            <div id="macroResult" class="result" aria-live="polite"></div>
+          </form>
+
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — In-Content (Macros Bottom)</div>
+          </div>
+
+          <div class="info">
+            <h3>Macro Split by Goal</h3>
+            <p class="muted">Typical starting points: Lose — 40% protein, 40% carbs, 20% fats. Maintain — 30% protein, 50% carbs, 20% fats. Gain — 25% protein, 55% carbs, 20% fats.</p>
+            <div class="ad inline" aria-label="Advertisement">
+              <div class="placeholder">Ad — Article Inline (Macros Explainer)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- bottom content ad -->
+        <section class="ad bottom" aria-label="Advertisement">
+          <div class="placeholder">Ad — Content Bottom</div>
+        </section>
+
+        <!-- ===== Global FAQs ===== -->
+        <section id="faq" class="card faq" aria-labelledby="faq-title">
+          <h2 id="faq-title">Frequently Asked Questions</h2>
+          <details>
+            <summary>Is FitCalcHub free to use?</summary>
+            <p>Yes. All calculators are free and work on mobile, tablet, and desktop.</p>
+          </details>
+          <details>
+            <summary>Is BMI accurate for athletes?</summary>
+            <p>BMI does not distinguish muscle vs. fat. Athletes may appear “overweight” on BMI despite low body fat.</p>
+          </details>
+          <details>
+            <summary>Which is better for fat loss — low carb or low fat?</summary>
+            <p>Adherence matters most. Maintain a reasonable calorie deficit with adequate protein and fiber.</p>
+          </details>
+          <details>
+            <summary>Can I copy these formulas?</summary>
+            <p>Yes, the formulas are public. We’ve implemented them with helpful defaults and safe ranges.</p>
+          </details>
+
+          <!-- FAQ inline ad -->
+          <div class="ad inline" aria-label="Advertisement">
+            <div class="placeholder">Ad — FAQ Inline</div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===== SIDEBAR ADS (desktop only) ===== -->
+      <aside class="sidebar" aria-label="Sidebar advertisements">
+        <div class="ad sidebar"><div class="placeholder">Ad — Sidebar Top</div></div>
+        <div class="ad sidebar"><div class="placeholder">Ad — Sidebar Middle</div></div>
+        <div class="ad sidebar"><div class="placeholder">Ad — Sidebar Bottom</div></div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Sticky anchor ad (mobile/desktop) -->
+  <div class="ad footer-sticky" aria-label="Sticky Advertisement">
+    <div class="placeholder">Ad — Sticky Footer Anchor</div>
+  </div>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> FitCalcHub • Educational use only — not medical advice.</p>
+  </footer>
+
+  <!-- ===== Script (vanilla JS) ===== -->
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile nav
+    const toggle = document.querySelector('.nav-toggle');
+    const links  = document.getElementById('links');
+    if (toggle) {
+      toggle.addEventListener('click', ()=>{
+        const open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+    }
+
+    // Helpers
+    const clamp = (v,min,max)=>Math.min(Math.max(v,min),max);
+    const q = id => document.getElementById(id);
+
+    // ===== BMI =====
+    const bmiForm = q('bmiForm');
+    const bmiUnit = q('bmiUnit');
+    const bmiH = q('bmiHeight');
+    const bmiW = q('bmiWeight');
+    const bmiErr = q('bmiError');
+    const bmiRes = q('bmiResult');
+    const bmiReset = q('bmiReset');
+    const hUnitSpans = document.querySelectorAll('[data-hunit]');
+    const wUnitSpans = document.querySelectorAll('[data-wunit]');
+
+    function updateBMIUnits(){
+      const metric = bmiUnit.value === 'metric';
+      hUnitSpans.forEach(s=>s.textContent = metric ? '(cm)' : '(in)');
+      wUnitSpans.forEach(s=>s.textContent = metric ? '(kg)' : '(lb)');
+    }
+    bmiUnit.addEventListener('change', ()=>{
+      // Optional: convert current values for convenience
+      const metric = bmiUnit.value === 'metric';
+      const h = parseFloat(bmiH.value); const w = parseFloat(bmiW.value);
+      if (!isNaN(h)) bmiH.value = metric ? (h*2.54).toFixed(1) : (h/2.54).toFixed(1);
+      if (!isNaN(w)) bmiW.value = metric ? (w/2.2046226218).toFixed(1) : (w*2.2046226218).toFixed(1);
+      updateBMIUnits();
+    });
+    updateBMIUnits();
+
+    bmiForm.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      bmiErr.textContent = ''; bmiRes.style.display='none';
+      const metric = bmiUnit.value === 'metric';
+      let h = parseFloat(bmiH.value);
+      let w = parseFloat(bmiW.value);
+      if (!h || !w || h<=0 || w<=0){ bmiErr.textContent='Please provide valid height and weight.'; return; }
+      if (!metric){ h = h*2.54; w = w/2.2046226218; } // in->cm, lb->kg
+      const m = h/100, bmi = w/(m*m), r = Math.round(bmi*10)/10;
+      let cat = 'Obese';
+      if (bmi < 18.5) cat='Underweight';
+      else if (bmi < 25) cat='Normal';
+      else if (bmi < 30) cat='Overweight';
+      bmiRes.innerHTML = `<strong>BMI:</strong> ${r} &nbsp; <em>${cat}</em>`;
+      bmiRes.style.display='block';
+    });
+    bmiReset.addEventListener('click', ()=>{ bmiForm.reset(); bmiErr.textContent=''; bmiRes.style.display='none'; updateBMIUnits(); });
+
+    // ===== Calorie Needs (Mifflin–St Jeor) =====
+    const calForm = q('calorieForm'), calErr = q('calorieError'), calRes = q('calorieResult'), calReset = q('calorieReset');
+    calForm.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      calErr.textContent=''; calRes.style.display='none';
+      const age = parseInt(q('age').value,10);
+      const gender = q('gender').value;
+      const h = parseFloat(q('calHeight').value);
+      const w = parseFloat(q('calWeight').value);
+      const act = parseFloat(q('activity').value);
+      const goal = q('goal').value;
+      if (!age || !gender || !h || !w || !act || !goal){ calErr.textContent='Please complete all fields.'; return; }
+      if (age<12 || age>100){ calErr.textContent='Age must be between 12 and 100.'; return; }
+      let bmr = (gender==='male') ? (10*w + 6.25*h - 5*age + 5) : (10*w + 6.25*h - 5*age - 161);
+      let calories = bmr * act;
+      if (goal==='lose') calories -= 500;
+      if (goal==='gain') calories += 500;
+      calories = clamp(calories, 800, 6000);
+      calRes.innerHTML = `<strong>Estimated Daily Calories:</strong> ${Math.round(calories).toLocaleString()} kcal`;
+      calRes.style.display='block';
+    });
+    calReset.addEventListener('click', ()=>{ calForm.reset(); calErr.textContent=''; calRes.style.display='none'; });
+
+    // ===== Macros =====
+    const mForm = q('macroForm'), mErr = q('macroError'), mRes = q('macroResult'), mReset = q('macroReset');
+    mForm.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      mErr.textContent=''; mRes.style.display='none';
+      const cal = parseFloat(q('macroCalories').value);
+      const goal = q('macroGoal').value;
+      if (!cal || cal<=0 || !goal){ mErr.textContent='Enter a valid calorie number and select a goal.'; return; }
+      let p=.3, c=.5, f=.2; // maintain default
+      if (goal==='lose'){ p=.4; c=.4; f=.2; }
+      if (goal==='gain'){ p=.25; c=.55; f=.2; }
+      const gp = Math.round((cal*p)/4);
+      const gc = Math.round((cal*c)/4);
+      const gf = Math.round((cal*f)/9);
+      mRes.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;text-align:center">
+          <div><strong>Protein</strong><br>${gp} g</div>
+          <div><strong>Carbs</strong><br>${gc} g</div>
+          <div><strong>Fats</strong><br>${gf} g</div>
+        </div>
+        <p class="muted" style="margin:.5rem 0 0">These are general guidelines and not medical advice.</p>`;
+      mRes.style.display='block';
+    });
+    mReset.addEventListener('click', ()=>{ mForm.reset(); mErr.textContent=''; mRes.style.display='none'; });
+  </script>
+
+  <!-- ===== HOW TO ADD ADS =====
+    Replace each .placeholder with your ad network code.
+    Example for AdSense (after adding the global loader in <head>):
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  ================================= -->
+</body>
+</html>
