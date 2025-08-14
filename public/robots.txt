@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fitcalchub.netlify.app/sitemap.xml
